@@ -1,0 +1,149 @@
+1)
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/url"
+)
+
+func main() {
+	u, err := url.Parse("https://www.website.com/person?name=Naveen%20Jalli&phone=%2B917036520405&phone=%2B629441200216")
+
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	fmt.Println("Scheme: ", u.Scheme)
+	fmt.Println("Host: ", u.Host)
+
+	queries := u.Query()
+	fmt.Println("Query Strings: ")
+	for key, value := range queries {
+		fmt.Printf("  %v = %v\n", key, value)
+	}
+	fmt.Println("Path: ", u.Path)
+}
+
+OUTPUT:-
+
+Scheme:  https
+Host:  www.website.com
+Query Strings: 
+  name = [Naveen Jalli]
+  phone = [+917036520405 +629441200216]
+Path:  /person
+
+1)
+
+package main
+
+import (
+    "fmt"
+    "net"
+    "net/url"
+)
+
+func main() {
+
+    s := "postgres://user:pass@host.com:5432/path?k=v#f"
+
+    u, err := url.Parse(s)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println(u.Scheme)
+
+    fmt.Println(u.User)
+    fmt.Println(u.User.Username())
+    p, _ := u.User.Password()
+    fmt.Println(p)
+
+    fmt.Println(u.Host)
+    host, port, _ := net.SplitHostPort(u.Host)
+    fmt.Println(host)
+    fmt.Println(port)
+
+    fmt.Println(u.Path)
+    fmt.Println(u.Fragment)
+
+    fmt.Println(u.RawQuery)
+    m, _ := url.ParseQuery(u.RawQuery)
+    fmt.Println(m)
+    fmt.Println(m["k"][0])
+}
+
+OUTPUT:-
+
+postgres
+user:pass
+user
+pass
+host.com:5432
+host.com
+5432
+/path
+f
+k=v
+map[k:[v]]
+v
+
+2)
+
+package main
+
+import (
+  "fmt"
+  "net"
+  "net/url"
+)
+
+func main() {
+
+    s := "http://localhost:8080/#access_token=tokenhere&scope=scopeshere"
+
+    u, err := url.Parse(s)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println(u.Fragment)
+    fragments, _ := url.ParseQuery(u.Fragment)
+    fmt.Println("Fragments:", fragments)
+    if fragments["access_token"] != nil {
+      fmt.Println("Access token:", fragments["access_token"][0])
+    } else {
+      fmt.Println("Access token not found")
+    }
+
+
+     fmt.Printf("\n\nOther data:\n")
+ 
+    fmt.Println("Scheme:", u.Scheme)
+
+    fmt.Println("Host:", u.Host)
+    host, port, _ := net.SplitHostPort(u.Host)
+    fmt.Println("Host without port:", host)
+    fmt.Println("Port:",port)
+
+    fmt.Println("Raw query:", u.RawQuery)
+    m, _ := url.ParseQuery(u.RawQuery)
+    fmt.Println(m)
+}
+
+
+access_token=tokenhere&scope=scopeshere
+Fragments: map[access_token:[tokenhere] scope:[scopeshere]]
+Access token: tokenhere
+
+OUTPUT:-
+
+Other data:
+Scheme: http
+Host: localhost:8080
+Host without port: localhost
+Port: 8080
+Raw query: 
+map[]
